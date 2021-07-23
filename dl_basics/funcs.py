@@ -1,15 +1,15 @@
 import torch
 
 
-def softmax(X, axis=1):
+def softmax(X, axis):
     X_exp = torch.exp(X)
     partition = X_exp.sum(axis=axis, keepdims=True)
     return X_exp / partition
 
 
-def net(X, W, b):
+def linear_with_softmax(X, W, b):
     logits = X.reshape(-1, W.shape[0]) @ W + b
-    return softmax(logits)
+    return softmax(logits, axis=1)
 
 
 def cross_entropy(y_hat, y):
