@@ -20,15 +20,23 @@ class SGD:
                 param.grad.zero_()
 
 
+class SoftmaxRegression(object):
+    def __init__(self, in_features, out_features):
+        self.W = torch.normal(0, 0.01, (in_features, out_features), requires_grad=True)
+        self.b = torch.zeros(1, requires_grad=True)
+
+    def params(self):
+        return [self.W, self.b]
+
+    def __call__(self, X):
+        logits = X.reshape(-1, self.W.shape[0]) @ self.W + self.b
+        return softmax(logits)
+
+
 def softmax(X, axis=1):
     X_exp = torch.exp(X)
     partition = X_exp.sum(axis=axis, keepdims=True)
     return X_exp / partition
-
-
-def softmax_regression(X, W, b):
-    logits = X.reshape(-1, W.shape[0]) @ W + b
-    return softmax(logits)
 
 
 def cross_entropy_loss(y_hat, y):
@@ -43,7 +51,7 @@ def cross_entropy_loss(y_hat, y):
 def accuracy(y_hat, y):
     pred_class = y_hat.argmax(axis=1)
     res = pred_class.type(y.dtype) == y
-    return
+    pass
 
 
 def load_data(X, y, batch_size, shuffle=True):
@@ -59,7 +67,7 @@ def load_data(X, y, batch_size, shuffle=True):
 def train(model, loss_fn, dataloader, optimizer, n_epochs):
     for epoch in range(n_epochs):
         for X, y in dataloader:
-            y_hat = model(X) # fix model with W, b
+            y_hat = model(X)
             loss = loss_fn(y_hat, y)
             loss.mean().backward()
             optimizer.step()
