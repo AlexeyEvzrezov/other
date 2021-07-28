@@ -70,3 +70,8 @@ def train(model, loss_fn, dataloader, optimizer, n_epochs):
             print(loss.mean())
             loss.mean().backward()
             optimizer.step()
+
+            
+def relu(X):
+    a = torch.zeros_like(X)
+    return torch.max(X, a)
